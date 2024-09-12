@@ -45,10 +45,26 @@ class GoodReadsSpider(scrapy.Spider):
     def parse(self, response):
         """Process the returned response and extract quote data."""
         for element in response.xpath("//div[@class='quote']"):
+            # Extract and clean the quote
+            quote = element.xpath(".//div[@class='quoteText']/text()").get(default='').strip()
+            quote = quote.replace('\u2019', '')  # Remove right single quotation mark
+            quote = quote.replace('\n', '')      # Remove newline character
+            quote = quote.replace('\u201c', '')  # Remove left double quotation mark
+            quote = quote.replace('\u201d', '')  # Remove right double quotation mark
+
+            # Extract, clean, and convert author name to uppercase
+            author = element.xpath(".//span[@class='authorOrTitle']/text()").get(default='').strip()
+            author = author.upper()  # Convert to uppercase
+
+            # Extract tags and change separator to semicolon
+            tags = element.xpath(".//div[@class='greyText smallText left']/a/text()").getall()
+            tags = [tag.strip() for tag in tags]  # Remove whitespace from each tag
+            tags_separated = ';'.join(tags)  # Join tags with semicolon
+
             item = {
-                'quote': element.xpath(".//div[@class='quoteText']/text()").get(),
-                'author': element.xpath(".//span[@class='authorOrTitle']/text()").get(),
-                'tags': element.xpath(".//div[@class='greyText smallText left']/a/text()").getall(),
+                'quote': quote,
+                'author': author,
+                'tags': tags_separated,
             }
 
             # Export the item using the exporters
