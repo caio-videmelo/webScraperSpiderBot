@@ -4,7 +4,6 @@ from scrapy.exporters import CsvItemExporter
 from scrapy.exporters import CsvItemExporter
 
 class GoodReadsSpider(scrapy.Spider):
-    # Identidade
     name = 'quotebot'
 
     def __init__(self, *args, **kwargs):
@@ -20,7 +19,6 @@ class GoodReadsSpider(scrapy.Spider):
 
     # Request
     def start_requests(self):
-        # Definir url(s) a varrer
         urls = ['https://www.goodreads.com/quotes?page=1']
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
@@ -30,8 +28,8 @@ class GoodReadsSpider(scrapy.Spider):
         # Process the returned response
         for elemento in response.xpath("//div[@class='quote']"):
             item = {
-                'frase': elemento.xpath(".//div[@class='quoteText']/text()").get(),
-                'autor': elemento.xpath(".//span[@class='authorOrTitle']/text()").get(),
+                'phrase': elemento.xpath(".//div[@class='quoteText']/text()").get(),
+                'author': elemento.xpath(".//span[@class='authorOrTitle']/text()").get(),
                 'tags': elemento.xpath(".//div[@class='greyText smallText left']/a/text()").getall(),
             }
             # Export the item using the exporter
@@ -39,7 +37,7 @@ class GoodReadsSpider(scrapy.Spider):
             yield item  # Yield the item for Scrapy's pipeline
 
         # Find the link to the next page and extract the page number
-        numero_proxima_pagina = response.xpath("//a[@class='next_page']/@href").get()
-        if numero_proxima_pagina is not None:
-            link_proxima_pagina = f'https://www.goodreads.com{numero_proxima_pagina}'
-            yield scrapy.Request(url=link_proxima_pagina, callback=self.parse)
+        number_next_page = response.xpath("//a[@class='next_page']/@href").get()
+        if number_next_page is not None:
+            link_next_page = f'https://www.goodreads.com{number_next_page}'
+            yield scrapy.Request(url=link_next_page, callback=self.parse)
