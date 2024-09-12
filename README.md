@@ -37,7 +37,7 @@ cd webScraperSpiderBot/scrapy_project/scr/spider
 ```
 2 - Run the spider:
 
-Execute the spider using the following command (replace the *nameOfBot* with the identification you use for the bot into the python code, I used newbot, but you can customize it):
+Execute the spider using the following command (replace the *nameOfBot* with the identification you use for the bot into the python code, I used quotebot, but you can change it):
 
 ```bash
 scrapy crawl *nameOfBot*
