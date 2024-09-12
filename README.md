@@ -1,6 +1,6 @@
 # Web Scraper Spider Bot
 
-This project contains a Scrapy spider designed to scrape quotes from the Goodreads website. The spider extracts quotes, authors, and tags, and exports the scraped data into multiple formats: CSV, XML, and JSON.
+This project contains a Scrapy spider designed to scrape quotes from the Goodreads website. The spider extracts quotes, authors, and tags, and exports the scraped data into multiple formats: CSV, XML, JSON and a SQLlite database.
 
 ## Project Structure
 scrapy_project/
@@ -10,6 +10,7 @@ scrapy_project/
 └── quotes_data.csv
 └── quotes_data.xml
 └── quotes_data.json
+└── quotes.db
 
 - **spider.py**: The main Python script that contains the Scrapy spider for scraping quotes from Goodreads.
 
@@ -18,6 +19,8 @@ scrapy_project/
 - **quotes_data.xml**: The output file where the scraped quotes, authors, and tags are stored.
 
 - **quotes_data.json**: The output file where the scraped quotes, authors, and tags are stored.
+
+- **quotes.db**: The output file where the scraped quotes, authors, and tags are stored.
 
 ## Requirements
 
@@ -56,7 +59,7 @@ After the spider finishes running, you will find the quotes_data.csv, quotes_dat
 ## Features
 
 - Scrapes quotes from multiple pages on Goodreads.
-- Exports the data into CSV, JSON and XML files for easy access and analysis.
+- Exports the data into CSV, JSON, XML and DB files for easy access and analysis.
 - Handles pagination automatically.
 
 ## Code Explanation
