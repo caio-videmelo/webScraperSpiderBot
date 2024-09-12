@@ -1,7 +1,7 @@
 import scrapy
 from scrapy.exporters import CsvItemExporter, XmlItemExporter, JsonItemExporter
 from scrapy.loader import ItemLoader
-
+import sqlite3
 
 class GoodReadsSpider(scrapy.Spider):
     """Spider to scrape quotes from Goodreads."""
@@ -26,6 +26,12 @@ class GoodReadsSpider(scrapy.Spider):
         self.xml_exporter.start_exporting()
         self.json_exporter.start_exporting()
 
+        # Connect to SQLite database
+        self.conn = sqlite3.connect('quotes.db')
+        self.cursor = self.conn.cursor()
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS quotes
+                             (quote TEXT, author TEXT, tags TEXT)''')
+
     def close(self, reason):
         """Finish exporting and close the files."""
         self.csv_exporter.finish_exporting()
@@ -34,6 +40,9 @@ class GoodReadsSpider(scrapy.Spider):
         self.csv_file.close()
         self.xml_file.close()
         self.json_file.close()
+
+        # Close the database connection
+        self.conn.close()
 
     def start_requests(self):
         """Initialize requests to scrape the specified URLs."""
@@ -71,6 +80,10 @@ class GoodReadsSpider(scrapy.Spider):
             self.csv_exporter.export_item(item)
             self.xml_exporter.export_item(item)
             self.json_exporter.export_item(item)
+
+            # Insert the item into the SQLite database
+            self.cursor.execute("INSERT INTO quotes VALUES (?, ?, ?)", (quote, author, tags_separated))
+            self.conn.commit()
 
             yield item  # Yield the item for Scrapy's pipeline
 
